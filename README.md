@@ -13,7 +13,7 @@ Este sistema está **exclusivamente diseñado para exportaciones con origen en A
 
 ## 🚀 Características Principales
 
-- **Clasificación Automática con Dataset Real**: Utiliza la base de datos oficial del Sistema Armonizado con coincidencia de texto inteligente
+- **Clasificación Automática con Dataset Real**: Utiliza una base de datos estática de códigos HS con búsqueda inteligente
 - **Sugerencias de Códigos HS**: Muestra los 3 códigos HS más relevantes con niveles de confianza
 - **Base de Datos de Medidas Comerciales**: 30+ escenarios reales de exportación argentina
 - **Acuerdos Comerciales**: Información sobre MERCOSUR, ACE 35, ACE 55, Cuota Hilton, y más
@@ -21,37 +21,52 @@ Este sistema está **exclusivamente diseñado para exportaciones con origen en A
 - **Exportación PDF**: Genera reportes profesionales de análisis de exportación
 - **Arquitectura Escalable**: Diseñado para agregar fácilmente nuevos productos y destinos
 
-## 🆕 Sistema de Clasificación HS (Actualizado)
+## 🆕 Sistema de Clasificación HS
 
-El sistema ahora utiliza el **dataset oficial del Sistema Armonizado cargado localmente** para clasificación precisa y rápida:
+El sistema utiliza un **dataset estático de códigos HS** almacenado como constante TypeScript para clasificación rápida y confiable:
 
 ### Cómo Funciona
 
-1. **Dataset Local**: Carga todos los códigos HS oficiales desde `/lib/data/harmonized-system.csv`
-2. **Sin Dependencias Externas**: No requiere llamadas a APIs externas ni GitHub en runtime
-3. **Coincidencia de Texto**: Usa algoritmos de similitud (Jaccard + keyword matching) para encontrar los códigos más relevantes
+1. **Dataset Estático**: Todos los códigos HS están en `/data/hs-data.ts` como constante TypeScript
+2. **Sin Dependencias Externas**: No requiere llamadas a APIs externas, archivos CSV, ni acceso a GitHub en runtime
+3. **Búsqueda Inteligente**: Usa algoritmos de coincidencia de texto para encontrar los códigos más relevantes
 4. **Múltiples Sugerencias**: Muestra los 3 mejores matches con niveles de confianza
-5. **Transparencia**: Explica por qué cada código fue sugerido
+5. **Rendimiento Óptimo**: Carga instantánea, sin latencia de red
 
 ### Actualizar el Dataset HS
 
-El dataset está almacenado localmente en: `/lib/data/harmonized-system.csv`
+El dataset está en: `/data/hs-data.ts`
 
-**Para actualizar el dataset:**
+**Para actualizar o agregar códigos HS:**
 
-1. Descarga la última versión del CSV desde el repositorio:
-   \`\`\`bash
-   curl -o lib/data/harmonized-system.csv https://raw.githubusercontent.com/julian-cortina/harmonized-system/main/data/harmonized-system.csv
+1. Abre el archivo `/data/hs-data.ts`
+
+2. Agrega nuevos códigos al array `hsData`:
+   \`\`\`typescript
+   export const hsData: HSItem[] = [
+     // ... códigos existentes ...
+     
+     // Nuevo código
+     { 
+       section: "II", 
+       code: "1008.50", 
+       description: "Quinoa", 
+       chapter: "10" 
+     },
+   ]
    \`\`\`
 
-2. O reemplaza manualmente el archivo `/lib/data/harmonized-system.csv` con la nueva versión
+3. Guarda el archivo - los cambios se aplican automáticamente en desarrollo
 
-3. Reinicia el servidor de desarrollo:
-   \`\`\`bash
-   npm run dev
-   \`\`\`
+**Estructura de cada entrada:**
+- `section`: Sección del Sistema Armonizado (I, II, III, etc.)
+- `code`: Código HS (2, 4, o 6 dígitos)
+- `description`: Descripción del producto en inglés
+- `chapter`: Capítulo de 2 dígitos
 
-**Nota**: El dataset se carga en memoria al iniciar el servidor, por lo que no hay impacto en el rendimiento durante el uso.
+**Fuentes para códigos HS:**
+- AFIP - Nomenclador Común del MERCOSUR: https://www.afip.gob.ar/
+- WCO - Harmonized System Database: https://www.wcoomd.org/
 
 ### API Endpoints
 
@@ -68,14 +83,14 @@ Content-Type: application/json
 
 # Respuesta:
 {
-  "hs_code": "0409.00",
-  "confidence": 0.85,
+  "hs_code": "040900",
+  "confidence": 0.95,
   "explanation": "Clasificado como: Natural honey",
   "alternatives": [
     {
-      "hs_code": "0409.00",
+      "hs_code": "040900",
       "description": "Natural honey",
-      "confidence": 0.85
+      "confidence": 0.95
     },
     // ... más alternativas
   ]
@@ -84,21 +99,21 @@ Content-Type: application/json
 
 #### 2. Obtener Medidas Arancelarias
 \`\`\`bash
-GET /api/measures?hs_code=0409.00&destination=Alemania
+GET /api/measures?hs_code=040900&destination=Alemania
 
 # Respuesta:
 {
   "id": 13,
-  "product_name": "Miel natural",
-  "hs_code": "0409.00",
-  "country_origin": "Argentina",
-  "country_destination": "Unión Europea",
-  "tariff_rate": "17.3%",
-  "non_tariff_measures": "Certificado sanitario, Análisis de residuos...",
-  "required_documents": "Factura comercial, Certificado sanitario SENASA...",
+  "productName": "Miel natural",
+  "hsCode": "040900",
+  "countryOrigin": "Argentina",
+  "countryDestination": "Unión Europea",
+  "tariffRate": "17.3%",
+  "nonTariffMeasures": "Certificado sanitario, Análisis de residuos...",
+  "requiredDocuments": "Factura comercial, Certificado sanitario SENASA...",
   "notes": "Requiere cumplir con regulaciones EU 2019/627...",
-  "trade_agreement": null,
-  "confidence_level": "high"
+  "tradeAgreement": null,
+  "confidenceLevel": "high"
 }
 \`\`\`
 
@@ -111,36 +126,36 @@ GET /api/hs-suggest?q=wine&limit=5
   "query": "wine",
   "suggestions": [
     {
-      "hs_code": "2204.21",
-      "description": "Wine of fresh grapes, in containers holding 2 l or less",
-      "confidence": 0.78,
-      "section": "IV"
+      "hs_code": "220421",
+      "description": "Wine in containers holding 2 litres or less",
+      "confidence": 0.95,
+      "section": "IV",
+      "chapter": "22"
     },
     // ... más sugerencias
   ]
 }
 \`\`\`
 
-#### 4. Debug: Verificar Carga del Dataset
+#### 4. Debug: Verificar Dataset HS
 \`\`\`bash
 GET /api/debug/load-hs
 
 # Respuesta:
 {
   "success": true,
-  "total_codes": 5205,
-  "sample_size": 3,
+  "total_codes": 100,
+  "sample_size": 5,
   "sample_data": [
     {
       "section": "I",
-      "hscode": "01",
+      "code": "01",
       "description": "Live animals",
-      "parent": "",
-      "level": "2"
+      "chapter": "01"
     },
     // ... más ejemplos
   ],
-  "message": "HS codes loaded successfully from local CSV"
+  "message": "HS codes loaded successfully from static data"
 }
 \`\`\`
 
@@ -249,9 +264,33 @@ El sistema incluye información detallada para los siguientes destinos:
 
 ## 📋 Cómo Agregar Nuevos Productos
 
-### Paso 1: Agregar el Producto al Clasificador
+### Paso 1: Agregar Códigos HS al Dataset
 
-Edita el archivo `lib/argentine-products.ts`:
+Edita el archivo `data/hs-data.ts`:
+
+\`\`\`typescript
+export const hsData: HSItem[] = [
+  // ... códigos existentes ...
+  
+  // Agrega tu nuevo código HS
+  { 
+    section: "II",  // Sección del Sistema Armonizado
+    code: "1008.50",  // Código HS (2, 4, o 6 dígitos)
+    description: "Quinoa",  // Descripción en inglés
+    chapter: "10"  // Capítulo de 2 dígitos
+  },
+]
+\`\`\`
+
+**Cómo Encontrar el Código HS Correcto:**
+1. Consulta el Nomenclador Común del MERCOSUR (NCM): https://www.afip.gob.ar/
+2. Usa la base de datos de la Organización Mundial de Aduanas: https://www.wcoomd.org/
+3. Consulta Trade Map: https://www.trademap.org/
+4. Verifica con un despachante de aduana
+
+### Paso 2: Agregar Reglas de Clasificación (Opcional)
+
+Si quieres mejorar la clasificación automática, edita `lib/argentine-products.ts`:
 
 \`\`\`typescript
 // Encuentra la categoría apropiada o crea una nueva
@@ -260,34 +299,16 @@ export const [categoria]Products: ProductRule[] = [
   
   // Agrega tu nuevo producto
   {
-    keywords: ["palabra1", "palabra2", "keyword1", "keyword2"],
-    hsCode: "1234.56", // Código HS de 6 dígitos mínimo
-    category: "Nombre descriptivo del producto",
-    confidence: 0.92, // 0.85-0.95 para productos específicos
-    notes: "Información adicional relevante (opcional)",
+    keywords: ["quinoa", "quinua", "grano andino", "chenopodium"],
+    hsCode: "1008.50",
+    category: "Quinoa",
+    confidence: 0.93,
+    notes: "Producto emergente de exportación argentina",
   },
-]
-
-// No olvides agregar la categoría a allArgentineProducts si es nueva
-export const allArgentineProducts: ProductRule[] = [
-  // ... categorías existentes ...
-  ...[categoria]Products, // Agrega tu nueva categoría
 ]
 \`\`\`
 
-**Consejos para Keywords:**
-- Incluye términos en español e inglés
-- Usa sinónimos y variaciones comunes
-- Incluye términos técnicos y coloquiales
-- Ejemplo: ["soja", "soya", "soybean", "poroto"]
-
-**Cómo Encontrar el Código HS Correcto:**
-1. Consulta el Nomenclador Común del MERCOSUR (NCM): https://www.afip.gob.ar/
-2. Usa la base de datos de la Organización Mundial de Aduanas: https://www.wcoomd.org/
-3. Consulta Trade Map: https://www.trademap.org/
-4. Verifica con un despachante de aduana
-
-### Paso 2: Agregar Medidas Comerciales
+### Paso 3: Agregar Medidas Comerciales
 
 Edita el archivo `lib/argentine-trade-data.ts`:
 
@@ -297,121 +318,43 @@ export const argentineTradeMeasures: TradeMeasure[] = [
   
   // Agrega medidas para tu producto
   {
-    id: [próximo_número], // Incrementa el ID
-    productName: "Nombre del producto",
-    hsCode: "1234.56", // Debe coincidir con el clasificador
-    countryOrigin: "Argentina", // Siempre Argentina
-    countryDestination: "País de Destino",
-    tariffRate: "X%", // o "0%" si hay acuerdo comercial
-    nonTariffMeasures: "Certificado fitosanitario, Inspección...",
-    requiredDocuments: "Factura comercial, Certificado de origen...",
-    notes: "Información adicional sobre acuerdos, cuotas, etc.",
-    tradeAgreement: "MERCOSUR", // Opcional: nombre del acuerdo
-    confidenceLevel: "high", // high, medium, o low
+    id: [próximo_número],
+    productName: "Quinoa",
+    hsCode: "1008.50",
+    countryOrigin: "Argentina",
+    countryDestination: "Estados Unidos",
+    tariffRate: "1.1%",
+    nonTariffMeasures: "Certificado fitosanitario SENASA, Inspección APHIS",
+    requiredDocuments: "Factura comercial, Certificado fitosanitario, Certificado de origen",
+    notes: "Producto emergente. Verificar requisitos específicos de cada estado.",
+    confidenceLevel: "high",
   },
 ]
 \`\`\`
 
-**Información Requerida por Campo:**
-
-- **tariffRate**: Arancel aplicable (consulta en Market Access Map: https://www.macmap.org/)
-- **nonTariffMeasures**: Certificados, inspecciones, registros requeridos
-- **requiredDocuments**: Documentación específica necesaria
-- **notes**: Acuerdos comerciales, cuotas, requisitos especiales
-- **tradeAgreement**: MERCOSUR, ACE 35, ACE 55, Cuota Hilton, etc.
-
-### Paso 3: Agregar Múltiples Destinos
-
-Para cada producto, agrega una entrada por cada destino de exportación relevante:
-
-\`\`\`typescript
-// Ejemplo: Vino tinto a diferentes destinos
-{
-  id: 1,
-  productName: "Vino tinto embotellado",
-  hsCode: "2204.21",
-  countryOrigin: "Argentina",
-  countryDestination: "Brasil",
-  tariffRate: "0%",
-  tradeAgreement: "MERCOSUR",
-  // ...
-},
-{
-  id: 2,
-  productName: "Vino tinto embotellado",
-  hsCode: "2204.21",
-  countryOrigin: "Argentina",
-  countryDestination: "Estados Unidos",
-  tariffRate: "6.3 cents/liter",
-  // ...
-},
-{
-  id: 3,
-  productName: "Vino tinto embotellado",
-  hsCode: "2204.21",
-  countryOrigin: "Argentina",
-  countryDestination: "China",
-  tariffRate: "14%",
-  // ...
-},
-\`\`\`
-
-## 🔄 Cómo Actualizar o Eliminar Productos
-
-### Actualizar un Producto Existente
-
-1. **Actualizar Keywords**: Edita `lib/argentine-products.ts` y modifica el array de keywords
-2. **Actualizar Código HS**: Cambia el hsCode si la clasificación cambió
-3. **Actualizar Medidas**: Edita `lib/argentine-trade-data.ts` y actualiza aranceles o requisitos
-
-### Eliminar un Producto
-
-1. **Eliminar del Clasificador**: Comenta o elimina la entrada en `lib/argentine-products.ts`
-2. **Eliminar Medidas**: Comenta o elimina todas las entradas relacionadas en `lib/argentine-trade-data.ts`
-
-**Nota**: Es mejor comentar que eliminar para mantener un historial de cambios.
-
-## 📚 Recursos para Información Comercial
-
-### Organismos Argentinos
-- **AFIP (Aduana Argentina)**: https://www.afip.gob.ar/
-- **SENASA**: https://www.argentina.gob.ar/senasa
-- **Cancillería Argentina**: https://www.cancilleria.gob.ar/
-- **Cámara de Exportadores**: https://www.cera.org.ar/
-
-### Acuerdos Comerciales
-- **MERCOSUR**: https://www.mercosur.int/
-- **ALADI**: https://www.aladi.org/
-- **OMC**: https://www.wto.org/
-
-### Herramientas de Investigación
-- **Trade Map**: https://www.trademap.org/ (estadísticas de comercio)
-- **Market Access Map**: https://www.macmap.org/ (aranceles y medidas)
-- **ITC Export Potential Map**: https://exportpotential.intracen.org/
-
-### Códigos HS
-- **Organización Mundial de Aduanas**: https://www.wcoomd.org/
-- **Nomenclador Común del MERCOSUR**: Disponible en AFIP
-
 ## 🏗️ Arquitectura del Sistema
 
 \`\`\`
+data/
+└── hs-data.ts                 # Dataset HS estático (100+ códigos)
+
+types/
+└── hs.ts                      # Definiciones de tipos TypeScript
+
 lib/
-├── data/
-│   └── harmonized-system.csv  # Dataset HS local (5000+ códigos)
-├── loadHSLocal.ts             # Cargador local de códigos HS
-├── argentine-products.ts      # Clasificador de productos (50+ productos)
+├── hs-matcher.ts              # Lógica de búsqueda y matching de códigos HS
+├── argentine-products.ts      # Reglas de clasificación (50+ productos)
 ├── argentine-trade-data.ts    # Medidas comerciales (30+ escenarios)
 ├── countries.ts               # Lista de países
-└── pdf-generator.ts           # Generación de reportes
+└── pdf-generator.ts           # Generación de reportes PDF
 
 app/
 ├── api/
-│   ├── classify/route.ts      # Endpoint de clasificación (usa dataset local)
-│   ├── measures/route.ts      # Endpoint de medidas comerciales (con fallback)
+│   ├── classify/route.ts      # Endpoint de clasificación
+│   ├── measures/route.ts      # Endpoint de medidas comerciales
 │   ├── hs-suggest/route.ts    # API de sugerencias (autocomplete)
 │   └── debug/
-│       └── load-hs/route.ts   # Endpoint de debug para verificar dataset
+│       └── load-hs/route.ts   # Endpoint de debug
 └── page.tsx                   # Página principal
 
 components/
@@ -430,9 +373,6 @@ git clone [url-del-repo]
 
 # Instalar dependencias
 npm install
-
-# Verificar que el dataset HS esté presente
-ls -lh lib/data/harmonized-system.csv
 
 # Ejecutar en desarrollo
 npm run dev
@@ -457,91 +397,89 @@ curl -X POST http://localhost:3000/api/classify \
   }'
 
 # 3. Obtener medidas arancelarias
-curl "http://localhost:3000/api/measures?hs_code=0409.00&destination=Alemania"
+curl "http://localhost:3000/api/measures?hs_code=040900&destination=Alemania"
 
 # 4. Sugerencias de códigos HS
 curl "http://localhost:3000/api/hs-suggest?q=honey&limit=3"
 \`\`\`
 
-## 📊 Algoritmo de Coincidencia HS
+## 📊 Algoritmo de Búsqueda HS
 
-El sistema usa un algoritmo de similitud de texto optimizado para encontrar los códigos HS más relevantes:
+El sistema usa un algoritmo de búsqueda optimizado implementado en `lib/hs-matcher.ts`:
 
-### Proceso de Coincidencia
+### Proceso de Búsqueda
 
-1. **Carga del Dataset**: Lee el CSV local una sola vez y lo cachea en memoria
-2. **Normalización**: Convierte texto a minúsculas y elimina caracteres especiales
-3. **Extracción de Keywords**: Identifica palabras clave (elimina stop words en español e inglés)
-4. **Similitud Jaccard**: Calcula intersección/unión de keywords
-5. **Boost por Coincidencias Exactas**: Aumenta score si hay frases exactas
-6. **Boost por Coincidencias Parciales**: Aumenta score por substrings largos
-7. **Ranking**: Ordena por confianza y devuelve top N
-
-### Fórmula de Score
-
-\`\`\`
-score = (jaccard * 0.4) + (exactMatch * 0.4) + (partialMatch * 0.2)
-
-donde:
-- jaccard = intersection / union de keywords
-- exactMatch = keywords exactos encontrados / total keywords
-- partialMatch = substrings largos encontrados / total keywords
-\`\`\`
+1. **Normalización**: Convierte texto a minúsculas
+2. **Extracción de Keywords**: Identifica palabras clave (mínimo 3 caracteres)
+3. **Scoring**:
+   - Coincidencia exacta: +100 puntos
+   - Contiene query completo: +50 puntos
+   - Coincidencia de keyword: +10 puntos
+   - Coincidencia en límite de palabra: +5 puntos adicionales
+4. **Ranking**: Ordena por score y devuelve top N resultados
 
 ### Niveles de Confianza
 
-- **Alta (70-100%)**: Coincidencia fuerte, descripción clara
-- **Media (40-69%)**: Coincidencia razonable, puede haber ambigüedad  
-- **Baja (5-39%)**: Coincidencia débil, verificar manualmente
+- **Alta (85-95%)**: Coincidencia fuerte, descripción clara
+- **Media (75-84%)**: Coincidencia razonable
+- **Baja (50-74%)**: Coincidencia débil, verificar manualmente
 
 **Importante**: Siempre verifica con un experto en comercio exterior antes de usar en operaciones reales.
 
-## 🔄 Mejoras en el Sistema de Medidas
+## 🔄 Sistema de Medidas con Fallback
 
-El endpoint `/api/measures` ahora incluye **fallback inteligente**:
+El endpoint `/api/measures` incluye **fallback inteligente**:
 
 1. **Búsqueda Exacta**: Busca coincidencia exacta de código HS + destino
-2. **Fallback por Capítulo**: Si no hay coincidencia exacta, busca por los primeros 4 dígitos (capítulo)
+2. **Fallback por Capítulo**: Si no hay coincidencia exacta, busca por los primeros 4 dígitos
 3. **Respuesta Genérica**: Si no hay datos, devuelve información genérica útil
-
-Ejemplo:
-\`\`\`bash
-# Código HS específico no encontrado: 0409.10
-GET /api/measures?hs_code=0409.10&destination=Alemania
-
-# Respuesta usa datos del capítulo 0409 (miel)
-{
-  "product_name": "Producto similar (capítulo 0409)",
-  "hs_code": "0409.10",
-  "tariff_rate": "Aproximado: 17.3% (verificar código específico)",
-  "notes": "Datos basados en producto similar (Miel natural, código 0409.00)...",
-  "confidence_level": "medium"
-}
-\`\`\`
 
 ## 🚨 Limitaciones y Consideraciones
 
 1. **Sistema MVP**: Los datos son representativos pero deben verificarse con autoridades oficiales
-2. **Clasificación por Similitud**: El algoritmo sugiere códigos basándose en texto; siempre verificar
-3. **Datos Estáticos**: Los aranceles y requisitos pueden cambiar; actualizar periódicamente
-4. **Consulta Profesional**: Siempre consultar con despachante de aduana para operaciones reales
-5. **Dataset HS Local**: El dataset se carga en memoria al iniciar; reiniciar servidor después de actualizarlo
-6. **Sin Llamadas Externas**: El sistema no hace llamadas a APIs externas en runtime para evitar rate limits
+2. **Dataset Limitado**: Contiene 100+ códigos HS principales, no todos los códigos existentes
+3. **Búsqueda por Texto**: El algoritmo sugiere códigos basándose en coincidencia de texto
+4. **Datos Estáticos**: Los aranceles y requisitos pueden cambiar; actualizar periódicamente
+5. **Consulta Profesional**: Siempre consultar con despachante de aduana para operaciones reales
+6. **Sin IA**: Usa búsqueda por texto, no inteligencia artificial (para activar IA, ver comentarios en `/app/api/classify/route.ts`)
 
 ## 🔮 Roadmap Futuro
 
-- [x] Integración con dataset oficial del Sistema Armonizado
-- [x] Sistema de sugerencias múltiples con niveles de confianza
-- [x] Carga local del dataset HS (sin dependencias externas)
-- [x] Fallback inteligente por capítulo en medidas arancelarias
+- [x] Dataset estático de códigos HS
+- [x] Sistema de búsqueda y matching
+- [x] Sugerencias múltiples con niveles de confianza
+- [x] Fallback inteligente por capítulo
 - [x] Endpoints de debug y sugerencias
+- [ ] Expandir dataset HS a 1000+ códigos
+- [ ] Integración con OpenAI para clasificación más precisa (requiere tarjeta de crédito en Vercel)
 - [ ] Integración con API de AFIP para códigos HS actualizados
-- [ ] Integración con OpenAI para clasificación más precisa
 - [ ] Base de datos dinámica con actualizaciones automáticas
 - [ ] Calculadora de costos de exportación
 - [ ] Integración con sistemas de gestión aduanera
 - [ ] Alertas de cambios en aranceles y requisitos
 - [ ] Soporte multiidioma
+
+## 📚 Recursos para Información Comercial
+
+### Organismos Argentinos
+- **AFIP (Aduana Argentina)**: https://www.afip.gob.ar/
+- **SENASA**: https://www.argentina.gob.ar/senasa
+- **Cancillería Argentina**: https://www.cancilleria.gob.ar/
+- **Cámara de Exportadores**: https://www.cera.org.ar/
+
+### Acuerdos Comerciales
+- **MERCOSUR**: https://www.mercosur.int/
+- **ALADI**: https://www.aladi.org/
+- **OMC**: https://www.wto.org/
+
+### Herramientas de Investigación
+- **Trade Map**: https://www.trademap.org/ (estadísticas de comercio)
+- **Market Access Map**: https://www.macmap.org/ (aranceles y medidas)
+- **ITC Export Potential Map**: https://exportpotential.intracen.org/
+
+### Códigos HS
+- **Organización Mundial de Aduanas**: https://www.wcoomd.org/
+- **Nomenclador Común del MERCOSUR**: Disponible en AFIP
 
 ---
 
