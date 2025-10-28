@@ -3,7 +3,15 @@
 import { useState } from "react"
 import { ProductAnalysisForm } from "@/components/product-analysis-form"
 import { AnalysisResults } from "@/components/analysis-results"
+import { HSCodeSuggestions } from "@/components/hs-code-suggestions"
 import { generatePDF } from "@/lib/pdf-generator"
+
+interface HSCodeMatch {
+  code: string
+  description: string
+  confidence: number
+  section: string
+}
 
 interface AnalysisResult {
   hsCode: string
@@ -14,6 +22,7 @@ interface AnalysisResult {
   requiredDocuments: string
   notes: string
   productName: string
+  allMatches?: HSCodeMatch[]
 }
 
 export default function Home() {
@@ -25,6 +34,7 @@ export default function Home() {
     countryOrigin: string
     countryDestination: string
   } | null>(null)
+  const [hsCodeSuggestions, setHsCodeSuggestions] = useState<HSCodeMatch[]>([])
 
   const handleAnalyze = async (data: {
     productDescription: string
@@ -35,6 +45,7 @@ export default function Home() {
     setError(null)
     setResult(null)
     setFormData(data)
+    setHsCodeSuggestions([])
 
     try {
       console.log("[v0] Starting analysis with data:", data)
@@ -66,6 +77,10 @@ export default function Home() {
       const classifyData = JSON.parse(classifyText)
       console.log("[v0] Classification data:", classifyData)
 
+      if (classifyData.all_matches && classifyData.all_matches.length > 0) {
+        setHsCodeSuggestions(classifyData.all_matches)
+      }
+
       // Call measures API
       console.log("[v0] Calling measures API...")
       const measuresResponse = await fetch(
@@ -90,6 +105,7 @@ export default function Home() {
         requiredDocuments: measuresData.required_documents || "No disponible",
         notes: measuresData.notes || "",
         productName: measuresData.product_name || "",
+        allMatches: classifyData.all_matches,
       })
 
       console.log("[v0] Analysis completed successfully")
@@ -144,8 +160,12 @@ export default function Home() {
 
       <main className="container mx-auto px-4 py-8">
         <div className="grid gap-6 lg:grid-cols-2">
-          <div>
+          <div className="space-y-6">
             <ProductAnalysisForm onAnalyze={handleAnalyze} isLoading={isLoading} />
+
+            {hsCodeSuggestions.length > 0 && (
+              <HSCodeSuggestions matches={hsCodeSuggestions} selectedCode={result?.hsCode} />
+            )}
           </div>
 
           <div>
@@ -176,7 +196,7 @@ export default function Home() {
                   </svg>
                   <h3 className="mt-4 text-lg font-semibold text-slate-900">Esperando análisis</h3>
                   <p className="mt-2 text-sm text-slate-600">
-                    Completa el formulario y haz clic en "Analizar Producto" para comenzar
+                    Completa el formulario y haz clic en "Analizar Exportación" para comenzar
                   </p>
                 </div>
               </div>

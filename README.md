@@ -13,12 +13,136 @@ Este sistema está **exclusivamente diseñado para exportaciones con origen en A
 
 ## 🚀 Características Principales
 
-- **Clasificación Automática de Productos**: Sistema basado en reglas que clasifica productos argentinos en códigos HS
+- **Clasificación Automática con Dataset Real**: Utiliza la base de datos oficial del Sistema Armonizado con coincidencia de texto inteligente
+- **Sugerencias de Códigos HS**: Muestra los 3 códigos HS más relevantes con niveles de confianza
 - **Base de Datos de Medidas Comerciales**: 30+ escenarios reales de exportación argentina
 - **Acuerdos Comerciales**: Información sobre MERCOSUR, ACE 35, ACE 55, Cuota Hilton, y más
 - **Requisitos Documentales**: Documentación específica requerida por SENASA y autoridades de destino
 - **Exportación PDF**: Genera reportes profesionales de análisis de exportación
 - **Arquitectura Escalable**: Diseñado para agregar fácilmente nuevos productos y destinos
+
+## 🆕 Sistema de Clasificación HS (Actualizado)
+
+El sistema ahora utiliza el **dataset oficial del Sistema Armonizado cargado localmente** para clasificación precisa y rápida:
+
+### Cómo Funciona
+
+1. **Dataset Local**: Carga todos los códigos HS oficiales desde `/lib/data/harmonized-system.csv`
+2. **Sin Dependencias Externas**: No requiere llamadas a APIs externas ni GitHub en runtime
+3. **Coincidencia de Texto**: Usa algoritmos de similitud (Jaccard + keyword matching) para encontrar los códigos más relevantes
+4. **Múltiples Sugerencias**: Muestra los 3 mejores matches con niveles de confianza
+5. **Transparencia**: Explica por qué cada código fue sugerido
+
+### Actualizar el Dataset HS
+
+El dataset está almacenado localmente en: `/lib/data/harmonized-system.csv`
+
+**Para actualizar el dataset:**
+
+1. Descarga la última versión del CSV desde el repositorio:
+   \`\`\`bash
+   curl -o lib/data/harmonized-system.csv https://raw.githubusercontent.com/julian-cortina/harmonized-system/main/data/harmonized-system.csv
+   \`\`\`
+
+2. O reemplaza manualmente el archivo `/lib/data/harmonized-system.csv` con la nueva versión
+
+3. Reinicia el servidor de desarrollo:
+   \`\`\`bash
+   npm run dev
+   \`\`\`
+
+**Nota**: El dataset se carga en memoria al iniciar el servidor, por lo que no hay impacto en el rendimiento durante el uso.
+
+### API Endpoints
+
+#### 1. Clasificación de Productos
+\`\`\`bash
+POST /api/classify
+Content-Type: application/json
+
+{
+  "productDescription": "miel natural frascos",
+  "countryOrigin": "Argentina",
+  "countryDestination": "Alemania"
+}
+
+# Respuesta:
+{
+  "hs_code": "0409.00",
+  "confidence": 0.85,
+  "explanation": "Clasificado como: Natural honey",
+  "alternatives": [
+    {
+      "hs_code": "0409.00",
+      "description": "Natural honey",
+      "confidence": 0.85
+    },
+    // ... más alternativas
+  ]
+}
+\`\`\`
+
+#### 2. Obtener Medidas Arancelarias
+\`\`\`bash
+GET /api/measures?hs_code=0409.00&destination=Alemania
+
+# Respuesta:
+{
+  "id": 13,
+  "product_name": "Miel natural",
+  "hs_code": "0409.00",
+  "country_origin": "Argentina",
+  "country_destination": "Unión Europea",
+  "tariff_rate": "17.3%",
+  "non_tariff_measures": "Certificado sanitario, Análisis de residuos...",
+  "required_documents": "Factura comercial, Certificado sanitario SENASA...",
+  "notes": "Requiere cumplir con regulaciones EU 2019/627...",
+  "trade_agreement": null,
+  "confidence_level": "high"
+}
+\`\`\`
+
+#### 3. Sugerencias de Códigos HS (Autocomplete)
+\`\`\`bash
+GET /api/hs-suggest?q=wine&limit=5
+
+# Respuesta:
+{
+  "query": "wine",
+  "suggestions": [
+    {
+      "hs_code": "2204.21",
+      "description": "Wine of fresh grapes, in containers holding 2 l or less",
+      "confidence": 0.78,
+      "section": "IV"
+    },
+    // ... más sugerencias
+  ]
+}
+\`\`\`
+
+#### 4. Debug: Verificar Carga del Dataset
+\`\`\`bash
+GET /api/debug/load-hs
+
+# Respuesta:
+{
+  "success": true,
+  "total_codes": 5205,
+  "sample_size": 3,
+  "sample_data": [
+    {
+      "section": "I",
+      "hscode": "01",
+      "description": "Live animals",
+      "parent": "",
+      "level": "2"
+    },
+    // ... más ejemplos
+  ],
+  "message": "HS codes loaded successfully from local CSV"
+}
+\`\`\`
 
 ## 📦 Productos Argentinos Soportados
 
@@ -273,21 +397,27 @@ Para cada producto, agrega una entrada por cada destino de exportación relevant
 
 \`\`\`
 lib/
+├── data/
+│   └── harmonized-system.csv  # Dataset HS local (5000+ códigos)
+├── loadHSLocal.ts             # Cargador local de códigos HS
 ├── argentine-products.ts      # Clasificador de productos (50+ productos)
 ├── argentine-trade-data.ts    # Medidas comerciales (30+ escenarios)
-├── hs-classifier.ts           # Lógica de clasificación
-├── countries.ts               # Lista de países (actualizada)
+├── countries.ts               # Lista de países
 └── pdf-generator.ts           # Generación de reportes
 
 app/
 ├── api/
-│   ├── classify/route.ts      # Endpoint de clasificación
-│   └── measures/route.ts      # Endpoint de medidas comerciales
+│   ├── classify/route.ts      # Endpoint de clasificación (usa dataset local)
+│   ├── measures/route.ts      # Endpoint de medidas comerciales (con fallback)
+│   ├── hs-suggest/route.ts    # API de sugerencias (autocomplete)
+│   └── debug/
+│       └── load-hs/route.ts   # Endpoint de debug para verificar dataset
 └── page.tsx                   # Página principal
 
 components/
 ├── product-analysis-form.tsx  # Formulario de análisis
-└── analysis-results.tsx       # Visualización de resultados
+├── analysis-results.tsx       # Visualización de resultados
+└── hs-code-suggestions.tsx    # Componente de sugerencias HS
 \`\`\`
 
 ## 🔧 Configuración Técnica
@@ -301,65 +431,110 @@ git clone [url-del-repo]
 # Instalar dependencias
 npm install
 
+# Verificar que el dataset HS esté presente
+ls -lh lib/data/harmonized-system.csv
+
 # Ejecutar en desarrollo
 npm run dev
+
+# Verificar que el dataset se cargó correctamente
+curl http://localhost:3000/api/debug/load-hs
 \`\`\`
 
-### Variables de Entorno (Opcional)
+### Pruebas de los Endpoints
 
-Para usar clasificación con IA real en lugar del sistema basado en reglas:
+\`\`\`bash
+# 1. Verificar carga del dataset
+curl http://localhost:3000/api/debug/load-hs
 
-\`\`\`env
-# Agregar tarjeta de crédito en Vercel para usar AI Gateway
-# No se requieren variables de entorno adicionales
+# 2. Clasificar un producto
+curl -X POST http://localhost:3000/api/classify \
+  -H "Content-Type: application/json" \
+  -d '{
+    "productDescription": "miel natural frascos",
+    "countryOrigin": "Argentina",
+    "countryDestination": "Alemania"
+  }'
+
+# 3. Obtener medidas arancelarias
+curl "http://localhost:3000/api/measures?hs_code=0409.00&destination=Alemania"
+
+# 4. Sugerencias de códigos HS
+curl "http://localhost:3000/api/hs-suggest?q=honey&limit=3"
 \`\`\`
 
-## 🎯 Casos de Uso
+## 📊 Algoritmo de Coincidencia HS
 
-### Caso 1: Exportador de Vino a Brasil
-1. Selecciona "Brasil" como destino
-2. Describe: "Vino Malbec tinto embotellado 750ml"
-3. Obtiene: Código HS 2204.21, arancel 0% (MERCOSUR), requisitos MAPA
+El sistema usa un algoritmo de similitud de texto optimizado para encontrar los códigos HS más relevantes:
 
-### Caso 2: Exportador de Carne a China
-1. Selecciona "China" como destino
-2. Describe: "Carne bovina congelada deshuesada"
-3. Obtiene: Código HS 0202.30, arancel 12%, requisitos GACC y SENASA
+### Proceso de Coincidencia
 
-### Caso 3: Exportador de Limones a USA
-1. Selecciona "Estados Unidos" como destino
-2. Describe: "Limones frescos"
-3. Obtiene: Código HS 0805.50, arancel 1.8 cents/kg, tratamiento de frío requerido
+1. **Carga del Dataset**: Lee el CSV local una sola vez y lo cachea en memoria
+2. **Normalización**: Convierte texto a minúsculas y elimina caracteres especiales
+3. **Extracción de Keywords**: Identifica palabras clave (elimina stop words en español e inglés)
+4. **Similitud Jaccard**: Calcula intersección/unión de keywords
+5. **Boost por Coincidencias Exactas**: Aumenta score si hay frases exactas
+6. **Boost por Coincidencias Parciales**: Aumenta score por substrings largos
+7. **Ranking**: Ordena por confianza y devuelve top N
 
-## 📊 Acuerdos Comerciales Implementados
+### Fórmula de Score
 
-### MERCOSUR
-- **Países**: Brasil, Paraguay, Uruguay
-- **Arancel**: 0% para la mayoría de productos
-- **Documentos**: Certificado de origen MERCOSUR
+\`\`\`
+score = (jaccard * 0.4) + (exactMatch * 0.4) + (partialMatch * 0.2)
 
-### ACE 35 (Argentina-Chile)
-- **Arancel**: 0% para productos incluidos
-- **Documentos**: Certificado de origen ACE 35
+donde:
+- jaccard = intersection / union de keywords
+- exactMatch = keywords exactos encontrados / total keywords
+- partialMatch = substrings largos encontrados / total keywords
+\`\`\`
 
-### ACE 55 (Argentina-México)
-- **Arancel**: Variable según producto y cuota
-- **Documentos**: Certificado de origen ACE 55
+### Niveles de Confianza
 
-### Cuota Hilton (Argentina-UE)
-- **Producto**: Carne bovina de alta calidad
-- **Cuota**: 29,000 toneladas anuales
-- **Arancel**: 0% dentro de cuota, 12.8% + €303.4/100kg fuera
+- **Alta (70-100%)**: Coincidencia fuerte, descripción clara
+- **Media (40-69%)**: Coincidencia razonable, puede haber ambigüedad  
+- **Baja (5-39%)**: Coincidencia débil, verificar manualmente
+
+**Importante**: Siempre verifica con un experto en comercio exterior antes de usar en operaciones reales.
+
+## 🔄 Mejoras en el Sistema de Medidas
+
+El endpoint `/api/measures` ahora incluye **fallback inteligente**:
+
+1. **Búsqueda Exacta**: Busca coincidencia exacta de código HS + destino
+2. **Fallback por Capítulo**: Si no hay coincidencia exacta, busca por los primeros 4 dígitos (capítulo)
+3. **Respuesta Genérica**: Si no hay datos, devuelve información genérica útil
+
+Ejemplo:
+\`\`\`bash
+# Código HS específico no encontrado: 0409.10
+GET /api/measures?hs_code=0409.10&destination=Alemania
+
+# Respuesta usa datos del capítulo 0409 (miel)
+{
+  "product_name": "Producto similar (capítulo 0409)",
+  "hs_code": "0409.10",
+  "tariff_rate": "Aproximado: 17.3% (verificar código específico)",
+  "notes": "Datos basados en producto similar (Miel natural, código 0409.00)...",
+  "confidence_level": "medium"
+}
+\`\`\`
 
 ## 🚨 Limitaciones y Consideraciones
 
 1. **Sistema MVP**: Los datos son representativos pero deben verificarse con autoridades oficiales
-2. **Clasificación Basada en Reglas**: Para producción, considerar integración con IA real
+2. **Clasificación por Similitud**: El algoritmo sugiere códigos basándose en texto; siempre verificar
 3. **Datos Estáticos**: Los aranceles y requisitos pueden cambiar; actualizar periódicamente
 4. **Consulta Profesional**: Siempre consultar con despachante de aduana para operaciones reales
+5. **Dataset HS Local**: El dataset se carga en memoria al iniciar; reiniciar servidor después de actualizarlo
+6. **Sin Llamadas Externas**: El sistema no hace llamadas a APIs externas en runtime para evitar rate limits
 
 ## 🔮 Roadmap Futuro
 
+- [x] Integración con dataset oficial del Sistema Armonizado
+- [x] Sistema de sugerencias múltiples con niveles de confianza
+- [x] Carga local del dataset HS (sin dependencias externas)
+- [x] Fallback inteligente por capítulo en medidas arancelarias
+- [x] Endpoints de debug y sugerencias
 - [ ] Integración con API de AFIP para códigos HS actualizados
 - [ ] Integración con OpenAI para clasificación más precisa
 - [ ] Base de datos dinámica con actualizaciones automáticas
@@ -367,17 +542,6 @@ Para usar clasificación con IA real en lugar del sistema basado en reglas:
 - [ ] Integración con sistemas de gestión aduanera
 - [ ] Alertas de cambios en aranceles y requisitos
 - [ ] Soporte multiidioma
-
-## 📞 Soporte
-
-Para consultas sobre exportaciones argentinas:
-- **Cámara de Exportadores**: https://www.cera.org.ar/
-- **AFIP**: https://www.afip.gob.ar/
-- **SENASA**: https://www.argentina.gob.ar/senasa
-
-## 📄 Licencia
-
-[Especificar licencia]
 
 ---
 

@@ -1,4 +1,4 @@
-import { classifyProduct } from "@/lib/hs-classifier"
+import { findTopHSMatches } from "@/lib/hs-matcher"
 
 // NOTE: To use real AI classification with OpenAI:
 // 1. Add a credit card to your Vercel account at https://vercel.com/~/ai
@@ -19,23 +19,38 @@ export async function POST(request: Request) {
       return Response.json({ error: "Faltan parámetros requeridos" }, { status: 400 })
     }
 
-    console.log("[v0] Classifying product with rule-based system...")
+    console.log("[v0] Finding closest HS codes from local dataset...")
 
-    const result = classifyProduct(productDescription)
+    const matches = findTopHSMatches(productDescription, 3)
 
-    console.log("[v0] Classification result:", result)
+    if (matches.length === 0) {
+      console.log("[v0] No matches found in HS code dataset")
+      return Response.json(
+        {
+          error: "No se encontraron códigos HS coincidentes",
+          details: "Intenta proporcionar una descripción más detallada del producto",
+        },
+        { status: 404 },
+      )
+    }
 
-    // Format response to match expected structure
+    // Use the best match (highest score)
+    const bestMatch = matches[0]
+
+    console.log("[v0] Best HS code match:", bestMatch)
+
     const response = {
-      hs_code: result.hsCode,
-      confidence: result.confidenceLevel / 100, // Convert percentage to 0-1 scale
-      explanation: `${result.productName}. ${result.reasoning}`,
+      hs_code: bestMatch.hs_code,
+      confidence: bestMatch.score,
+      explanation: `Clasificado como: ${bestMatch.description}`,
+      alternatives: matches.map((m) => ({
+        hs_code: m.hs_code,
+        description: m.description,
+        confidence: m.score,
+      })),
     }
 
     console.log("[v0] Formatted response:", response)
-
-    // Database logging is disabled for now
-    // await logQuery(productDescription, countryOrigin, countryDestination, result.hsCode, result.confidenceLevel / 100)
 
     return Response.json(response)
   } catch (error) {
@@ -45,9 +60,6 @@ export async function POST(request: Request) {
       console.error("[v0] Error name:", error.name)
       console.error("[v0] Error message:", error.message)
       console.error("[v0] Error stack:", error.stack)
-    } else {
-      console.error("[v0] Unknown error type:", typeof error)
-      console.error("[v0] Error value:", error)
     }
 
     return Response.json(
