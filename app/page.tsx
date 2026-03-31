@@ -4,7 +4,7 @@ import { useState } from "react"
 import { ProductAnalysisForm } from "@/components/product-analysis-form"
 import { AnalysisResults } from "@/components/analysis-results"
 import { HSCodeSuggestions } from "@/components/hs-code-suggestions"
-import { generatePDF } from "@/lib/pdf-generator"
+import { NCMSearch } from "@/components/ncm-search"
 
 interface HSCodeMatch {
   code: string
@@ -117,10 +117,13 @@ export default function Home() {
     }
   }
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     if (!result || !formData) return
 
-    generatePDF({
+    // Dynamic import to avoid SSR issues with jspdf
+    const { generatePDF } = await import("@/lib/pdf-generator")
+    
+    await generatePDF({
       hsCode: result.hsCode,
       confidence: result.confidence,
       explanation: result.explanation,
@@ -161,6 +164,8 @@ export default function Home() {
       <main className="container mx-auto px-4 py-8">
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-6">
+            <NCMSearch />
+            
             <ProductAnalysisForm onAnalyze={handleAnalyze} isLoading={isLoading} />
 
             {hsCodeSuggestions.length > 0 && (
