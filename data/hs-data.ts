@@ -26,21 +26,31 @@
 import type { HSItem } from "@/types/hs"
 
 export const hsData: HSItem[] = [
-  // SECTION I - LIVE ANIMALS; ANIMAL PRODUCTS
-  { section: "I", code: "01", description: "Live animals", chapter: "01" },
-  { section: "I", code: "0101", description: "Live horses, asses, mules and hinnies", chapter: "01" },
-  { section: "I", code: "010121", description: "Horses - Pure-bred breeding animals", chapter: "01" },
-  { section: "I", code: "010129", description: "Horses - Other than pure-bred breeding", chapter: "01" },
+  // SECTION I - LIVE ANIMALS; ANIMAL PRODUCTS (Bilingual descriptions for NCM)
+  { section: "I", code: "01", description: "Animales vivos / Live animals", chapter: "01" },
+  { section: "I", code: "0101", description: "Caballos, asnos, mulos e hínnys vivos / Live horses, asses, mules and hinnies", chapter: "01" },
+  { section: "I", code: "010121", description: "Caballos reproductores de raza pura / Horses - Pure-bred breeding animals", chapter: "01" },
+  { section: "I", code: "010129", description: "Otros caballos vivos / Horses - Other than pure-bred breeding", chapter: "01" },
 
-  { section: "I", code: "02", description: "Meat and edible meat offal", chapter: "02" },
-  { section: "I", code: "0201", description: "Meat of bovine animals, fresh or chilled", chapter: "02" },
-  { section: "I", code: "020130", description: "Bovine meat - Boneless, fresh or chilled", chapter: "02" },
-  { section: "I", code: "0202", description: "Meat of bovine animals, frozen", chapter: "02" },
-  { section: "I", code: "020230", description: "Bovine meat - Boneless, frozen", chapter: "02" },
-  { section: "I", code: "0203", description: "Meat of swine, fresh, chilled or frozen", chapter: "02" },
-  { section: "I", code: "020329", description: "Swine meat - Frozen, other cuts", chapter: "02" },
-  { section: "I", code: "0207", description: "Meat and edible offal of poultry", chapter: "02" },
-  { section: "I", code: "020714", description: "Poultry - Frozen cuts and offal of fowls", chapter: "02" },
+  { section: "I", code: "02", description: "Carne y despojos comestibles / Meat and edible meat offal", chapter: "02" },
+  { section: "I", code: "0201", description: "Carne de animales de la especie bovina, fresca o refrigerada / Meat of bovine animals, fresh or chilled", chapter: "02" },
+  { section: "I", code: "020110", description: "Carne bovina en canales o medias canales, fresca o refrigerada", chapter: "02" },
+  { section: "I", code: "020120", description: "Carne bovina en trozos sin deshuesar, fresca o refrigerada", chapter: "02" },
+  { section: "I", code: "020130", description: "Carne bovina deshuesada, fresca o refrigerada / Bovine meat - Boneless, fresh or chilled", chapter: "02" },
+  { section: "I", code: "0202", description: "Carne de animales de la especie bovina, congelada / Meat of bovine animals, frozen", chapter: "02" },
+  { section: "I", code: "020210", description: "Carne bovina en canales o medias canales, congelada", chapter: "02" },
+  { section: "I", code: "020220", description: "Carne bovina en trozos sin deshuesar, congelada", chapter: "02" },
+  { section: "I", code: "020230", description: "Carne bovina deshuesada, congelada / Bovine meat - Boneless, frozen", chapter: "02" },
+  { section: "I", code: "0203", description: "Carne de animales de la especie porcina / Meat of swine, fresh, chilled or frozen", chapter: "02" },
+  { section: "I", code: "020311", description: "Carne porcina en canales o medias canales, fresca o refrigerada", chapter: "02" },
+  { section: "I", code: "020312", description: "Jamones y paletas de cerdo con hueso, frescos o refrigerados", chapter: "02" },
+  { section: "I", code: "020319", description: "Otras carnes de cerdo, frescas o refrigeradas", chapter: "02" },
+  { section: "I", code: "020321", description: "Carne porcina en canales o medias canales, congelada", chapter: "02" },
+  { section: "I", code: "020329", description: "Otras carnes de cerdo, congeladas / Swine meat - Frozen, other cuts", chapter: "02" },
+  { section: "I", code: "0207", description: "Carne y despojos de aves / Meat and edible offal of poultry", chapter: "02" },
+  { section: "I", code: "020711", description: "Gallos y gallinas enteros, sin trocear, frescos o refrigerados", chapter: "02" },
+  { section: "I", code: "020712", description: "Gallos y gallinas enteros, sin trocear, congelados", chapter: "02" },
+  { section: "I", code: "020714", description: "Trozos y despojos de gallo o gallina, congelados / Poultry - Frozen cuts and offal of fowls", chapter: "02" },
 
   { section: "I", code: "03", description: "Fish and crustaceans, molluscs", chapter: "03" },
   { section: "I", code: "0304", description: "Fish fillets and other fish meat", chapter: "03" },
@@ -50,45 +60,89 @@ export const hsData: HSItem[] = [
   { section: "I", code: "0307", description: "Molluscs", chapter: "03" },
   { section: "I", code: "030743", description: "Molluscs - Cuttlefish and squid, frozen", chapter: "03" },
 
-  { section: "I", code: "04", description: "Dairy produce; birds' eggs; natural honey", chapter: "04" },
-  { section: "I", code: "0409", description: "Natural honey", chapter: "04" },
-  { section: "I", code: "040900", description: "Natural honey", chapter: "04" },
-  {
-    section: "I",
-    code: "0410",
-    description: "Edible products of animal origin, not elsewhere specified",
-    chapter: "04",
-  },
-  { section: "I", code: "041000", description: "Edible products of animal origin, n.e.s.", chapter: "04" },
+  { section: "I", code: "04", description: "Productos lácteos, huevos y miel natural / Dairy produce; birds' eggs; natural honey", chapter: "04" },
+  { section: "I", code: "0401", description: "Leche y nata sin concentrar ni azucarar", chapter: "04" },
+  { section: "I", code: "040110", description: "Leche con materia grasa inferior o igual al 1%", chapter: "04" },
+  { section: "I", code: "040120", description: "Leche con materia grasa superior al 1% pero inferior o igual al 6%", chapter: "04" },
+  { section: "I", code: "0402", description: "Leche y nata concentradas o azucaradas", chapter: "04" },
+  { section: "I", code: "040210", description: "Leche en polvo con materia grasa inferior o igual al 1.5%", chapter: "04" },
+  { section: "I", code: "040221", description: "Leche en polvo sin azúcar con materia grasa superior al 1.5%", chapter: "04" },
+  { section: "I", code: "0403", description: "Suero de mantequilla, yogur y otros productos lácteos fermentados", chapter: "04" },
+  { section: "I", code: "040310", description: "Yogur", chapter: "04" },
+  { section: "I", code: "0404", description: "Lactosuero y productos de lactosuero", chapter: "04" },
+  { section: "I", code: "0405", description: "Mantequilla y demás materias grasas de la leche", chapter: "04" },
+  { section: "I", code: "040510", description: "Mantequilla (manteca)", chapter: "04" },
+  { section: "I", code: "0406", description: "Quesos y requesón", chapter: "04" },
+  { section: "I", code: "040610", description: "Queso fresco (sin madurar), incluido el requesón", chapter: "04" },
+  { section: "I", code: "040620", description: "Queso rallado o en polvo", chapter: "04" },
+  { section: "I", code: "040630", description: "Queso fundido", chapter: "04" },
+  { section: "I", code: "040690", description: "Los demás quesos", chapter: "04" },
+  { section: "I", code: "0407", description: "Huevos de ave con cáscara", chapter: "04" },
+  { section: "I", code: "040711", description: "Huevos fecundados para incubación de gallina", chapter: "04" },
+  { section: "I", code: "040721", description: "Huevos frescos de gallina", chapter: "04" },
+  { section: "I", code: "0408", description: "Huevos de ave sin cáscara y yemas de huevo", chapter: "04" },
+  { section: "I", code: "0409", description: "Miel natural / Natural honey", chapter: "04" },
+  { section: "I", code: "040900", description: "Miel natural de abeja / Natural honey", chapter: "04" },
+  { section: "I", code: "04090010", description: "Miel natural orgánica certificada", chapter: "04" },
+  { section: "I", code: "04090020", description: "Miel natural multifloral", chapter: "04" },
+  { section: "I", code: "04090030", description: "Miel natural monofloral (eucalipto, alfalfa, etc.)", chapter: "04" },
+  { section: "I", code: "0410", description: "Productos comestibles de origen animal n.e.p. / Edible products of animal origin, not elsewhere specified", chapter: "04" },
+  { section: "I", code: "041000", description: "Productos comestibles de origen animal n.e.p. / Edible products of animal origin, n.e.s.", chapter: "04" },
 
   // SECTION II - VEGETABLE PRODUCTS
   { section: "II", code: "07", description: "Edible vegetables and certain roots and tubers", chapter: "07" },
   { section: "II", code: "0711", description: "Vegetables provisionally preserved", chapter: "07" },
   { section: "II", code: "071120", description: "Olives, provisionally preserved", chapter: "07" },
 
-  { section: "II", code: "08", description: "Edible fruit and nuts; peel of citrus fruit or melons", chapter: "08" },
-  { section: "II", code: "0805", description: "Citrus fruit, fresh or dried", chapter: "08" },
-  { section: "II", code: "080550", description: "Lemons and limes, fresh or dried", chapter: "08" },
-  { section: "II", code: "0806", description: "Grapes, fresh or dried", chapter: "08" },
-  { section: "II", code: "080610", description: "Grapes, fresh", chapter: "08" },
-  { section: "II", code: "0808", description: "Apples, pears and quinces, fresh", chapter: "08" },
-  { section: "II", code: "080810", description: "Apples, fresh", chapter: "08" },
-  { section: "II", code: "080830", description: "Pears, fresh", chapter: "08" },
-  { section: "II", code: "0809", description: "Apricots, cherries, peaches, plums and sloes, fresh", chapter: "08" },
-  { section: "II", code: "080929", description: "Cherries, fresh, other", chapter: "08" },
-  { section: "II", code: "0810", description: "Other fruit, fresh", chapter: "08" },
-  {
-    section: "II",
-    code: "081040",
-    description: "Cranberries, bilberries and other fruits of the genus Vaccinium, fresh",
-    chapter: "08",
-  },
+  { section: "II", code: "08", description: "Frutas y frutos comestibles / Edible fruit and nuts; peel of citrus fruit or melons", chapter: "08" },
+  { section: "II", code: "0805", description: "Cítricos frescos o secos / Citrus fruit, fresh or dried", chapter: "08" },
+  { section: "II", code: "080510", description: "Naranjas frescas o secas", chapter: "08" },
+  { section: "II", code: "080520", description: "Mandarinas, clementinas y similares, frescas o secas", chapter: "08" },
+  { section: "II", code: "080540", description: "Pomelos y toronjas frescos o secos", chapter: "08" },
+  { section: "II", code: "080550", description: "Limones y limas frescos o secos / Lemons and limes, fresh or dried", chapter: "08" },
+  { section: "II", code: "08055010", description: "Limones amarillos frescos", chapter: "08" },
+  { section: "II", code: "08055020", description: "Limas frescas", chapter: "08" },
+  { section: "II", code: "0806", description: "Uvas frescas o secas / Grapes, fresh or dried", chapter: "08" },
+  { section: "II", code: "080610", description: "Uvas frescas / Grapes, fresh", chapter: "08" },
+  { section: "II", code: "080620", description: "Uvas secas (pasas de uva)", chapter: "08" },
+  { section: "II", code: "0807", description: "Melones, sandías y papayas frescos", chapter: "08" },
+  { section: "II", code: "080711", description: "Sandías frescas", chapter: "08" },
+  { section: "II", code: "0808", description: "Manzanas, peras y membrillos frescos / Apples, pears and quinces, fresh", chapter: "08" },
+  { section: "II", code: "080810", description: "Manzanas frescas / Apples, fresh", chapter: "08" },
+  { section: "II", code: "080830", description: "Peras frescas / Pears, fresh", chapter: "08" },
+  { section: "II", code: "080840", description: "Membrillos frescos", chapter: "08" },
+  { section: "II", code: "0809", description: "Damascos, cerezas, duraznos, ciruelas frescos / Apricots, cherries, peaches, plums and sloes, fresh", chapter: "08" },
+  { section: "II", code: "080910", description: "Damascos (albaricoques) frescos", chapter: "08" },
+  { section: "II", code: "080921", description: "Cerezas ácidas frescas", chapter: "08" },
+  { section: "II", code: "080929", description: "Otras cerezas frescas / Cherries, fresh, other", chapter: "08" },
+  { section: "II", code: "080930", description: "Duraznos (melocotones) frescos, incluidos los griñones y nectarinas", chapter: "08" },
+  { section: "II", code: "080940", description: "Ciruelas y endrinas frescas", chapter: "08" },
+  { section: "II", code: "0810", description: "Otras frutas frescas / Other fruit, fresh", chapter: "08" },
+  { section: "II", code: "081010", description: "Frutillas (fresas) frescas", chapter: "08" },
+  { section: "II", code: "081020", description: "Frambuesas, zarzamoras, moras y moras-frambuesa frescas", chapter: "08" },
+  { section: "II", code: "081040", description: "Arándanos rojos, mirtilos y demás frutos del género Vaccinium frescos / Cranberries, bilberries and other fruits of the genus Vaccinium, fresh", chapter: "08" },
+  { section: "II", code: "081050", description: "Kiwis frescos", chapter: "08" },
+  { section: "II", code: "0811", description: "Frutas congeladas", chapter: "08" },
+  { section: "II", code: "081110", description: "Frutillas (fresas) congeladas", chapter: "08" },
+  { section: "II", code: "081120", description: "Frambuesas y moras congeladas", chapter: "08" },
+  { section: "II", code: "0812", description: "Frutas conservadas provisionalmente", chapter: "08" },
+  { section: "II", code: "0813", description: "Frutas secas (excepto 08.01 a 08.06)", chapter: "08" },
+  { section: "II", code: "081340", description: "Otras frutas secas", chapter: "08" },
 
-  { section: "II", code: "09", description: "Coffee, tea, maté and spices", chapter: "09" },
-  { section: "II", code: "0901", description: "Coffee", chapter: "09" },
-  { section: "II", code: "090111", description: "Coffee, not roasted, not decaffeinated", chapter: "09" },
-  { section: "II", code: "0903", description: "Maté", chapter: "09" },
-  { section: "II", code: "090300", description: "Maté (yerba mate)", chapter: "09" },
+  { section: "II", code: "09", description: "Café, té, yerba mate y especias / Coffee, tea, maté and spices", chapter: "09" },
+  { section: "II", code: "0901", description: "Café / Coffee", chapter: "09" },
+  { section: "II", code: "090111", description: "Café sin tostar ni descafeinar / Coffee, not roasted, not decaffeinated", chapter: "09" },
+  { section: "II", code: "090112", description: "Café descafeinado sin tostar", chapter: "09" },
+  { section: "II", code: "090121", description: "Café tostado sin descafeinar", chapter: "09" },
+  { section: "II", code: "090122", description: "Café tostado descafeinado", chapter: "09" },
+  { section: "II", code: "0902", description: "Té / Tea", chapter: "09" },
+  { section: "II", code: "090210", description: "Té verde sin fermentar", chapter: "09" },
+  { section: "II", code: "090230", description: "Té negro fermentado", chapter: "09" },
+  { section: "II", code: "0903", description: "Yerba mate / Maté", chapter: "09" },
+  { section: "II", code: "090300", description: "Yerba mate / Maté (yerba mate)", chapter: "09" },
+  { section: "II", code: "09030010", description: "Yerba mate elaborada con palo", chapter: "09" },
+  { section: "II", code: "09030020", description: "Yerba mate elaborada despalada (sin palo)", chapter: "09" },
+  { section: "II", code: "09030090", description: "Yerba mate en otras presentaciones", chapter: "09" },
 
   { section: "II", code: "10", description: "Cereals", chapter: "10" },
   { section: "II", code: "1001", description: "Wheat and meslin", chapter: "10" },
@@ -100,29 +154,67 @@ export const hsData: HSItem[] = [
   { section: "II", code: "1007", description: "Grain sorghum", chapter: "10" },
   { section: "II", code: "100790", description: "Grain sorghum, other than seed", chapter: "10" },
 
-  { section: "II", code: "12", description: "Oil seeds and oleaginous fruits", chapter: "12" },
-  { section: "II", code: "1201", description: "Soya beans", chapter: "12" },
-  { section: "II", code: "120190", description: "Soya beans, other than seed", chapter: "12" },
-  { section: "II", code: "1206", description: "Sunflower seeds", chapter: "12" },
-  { section: "II", code: "120600", description: "Sunflower seeds, whether or not broken", chapter: "12" },
+  { section: "II", code: "12", description: "Semillas y frutos oleaginosos / Oil seeds and oleaginous fruits", chapter: "12" },
+  { section: "II", code: "1201", description: "Habas de soja (porotos de soja) / Soya beans", chapter: "12" },
+  { section: "II", code: "120110", description: "Habas de soja para siembra", chapter: "12" },
+  { section: "II", code: "120190", description: "Habas de soja (excepto para siembra) / Soya beans, other than seed", chapter: "12" },
+  { section: "II", code: "1202", description: "Maníes (cacahuetes) / Groundnuts", chapter: "12" },
+  { section: "II", code: "120241", description: "Maníes con cáscara para siembra", chapter: "12" },
+  { section: "II", code: "120242", description: "Maníes sin cáscara, incluso quebrantados", chapter: "12" },
+  { section: "II", code: "1205", description: "Semillas de colza o nabo / Rape or colza seeds", chapter: "12" },
+  { section: "II", code: "120510", description: "Semillas de colza de bajo contenido de ácido erúcico", chapter: "12" },
+  { section: "II", code: "1206", description: "Semillas de girasol / Sunflower seeds", chapter: "12" },
+  { section: "II", code: "120600", description: "Semillas de girasol, incluso quebrantadas / Sunflower seeds, whether or not broken", chapter: "12" },
+  { section: "II", code: "1207", description: "Otras semillas y frutos oleaginosos", chapter: "12" },
+  { section: "II", code: "120740", description: "Semillas de sésamo (ajonjolí)", chapter: "12" },
+  { section: "II", code: "120760", description: "Semillas de cártamo", chapter: "12" },
 
-  // SECTION III - ANIMAL OR VEGETABLE FATS AND OILS
-  { section: "III", code: "15", description: "Animal or vegetable fats and oils", chapter: "15" },
-  { section: "III", code: "1507", description: "Soya-bean oil and its fractions", chapter: "15" },
-  { section: "III", code: "150710", description: "Soya-bean oil, crude", chapter: "15" },
-  { section: "III", code: "1509", description: "Olive oil and its fractions", chapter: "15" },
-  { section: "III", code: "150910", description: "Olive oil, virgin", chapter: "15" },
-  { section: "III", code: "1512", description: "Sunflower-seed, safflower or cotton-seed oil", chapter: "15" },
-  { section: "III", code: "151211", description: "Sunflower-seed or safflower oil, crude", chapter: "15" },
+  // SECTION III - ANIMAL OR VEGETABLE FATS AND OILS (ACEITES)
+  { section: "III", code: "15", description: "Grasas y aceites animales o vegetales / Animal or vegetable fats and oils", chapter: "15" },
+  { section: "III", code: "1507", description: "Aceite de soja y sus fracciones / Soya-bean oil and its fractions", chapter: "15" },
+  { section: "III", code: "150710", description: "Aceite de soja en bruto, incluso desgomado / Soya-bean oil, crude", chapter: "15" },
+  { section: "III", code: "150790", description: "Aceite de soja refinado", chapter: "15" },
+  { section: "III", code: "1508", description: "Aceite de maní (cacahuete) y sus fracciones", chapter: "15" },
+  { section: "III", code: "150810", description: "Aceite de maní en bruto", chapter: "15" },
+  { section: "III", code: "150890", description: "Aceite de maní refinado", chapter: "15" },
+  { section: "III", code: "1509", description: "Aceite de oliva y sus fracciones / Olive oil and its fractions", chapter: "15" },
+  { section: "III", code: "150910", description: "Aceite de oliva virgen / Olive oil, virgin", chapter: "15" },
+  { section: "III", code: "150990", description: "Aceite de oliva refinado", chapter: "15" },
+  { section: "III", code: "1510", description: "Otros aceites de oliva y mezclas", chapter: "15" },
+  { section: "III", code: "1511", description: "Aceite de palma y sus fracciones", chapter: "15" },
+  { section: "III", code: "1512", description: "Aceite de girasol, cártamo o algodón / Sunflower-seed, safflower or cotton-seed oil", chapter: "15" },
+  { section: "III", code: "151211", description: "Aceite de girasol o cártamo en bruto / Sunflower-seed or safflower oil, crude", chapter: "15" },
+  { section: "III", code: "151219", description: "Aceite de girasol o cártamo refinado", chapter: "15" },
+  { section: "III", code: "151221", description: "Aceite de algodón en bruto", chapter: "15" },
+  { section: "III", code: "1514", description: "Aceite de colza o nabo y sus fracciones", chapter: "15" },
+  { section: "III", code: "1515", description: "Otras grasas y aceites vegetales fijos", chapter: "15" },
+  { section: "III", code: "151530", description: "Aceite de ricino y sus fracciones", chapter: "15" },
+  { section: "III", code: "1516", description: "Grasas y aceites hidrogenados", chapter: "15" },
+  { section: "III", code: "1517", description: "Margarina y mezclas de grasas", chapter: "15" },
 
-  // SECTION IV - PREPARED FOODSTUFFS
-  { section: "IV", code: "22", description: "Beverages, spirits and vinegar", chapter: "22" },
-  { section: "IV", code: "2204", description: "Wine of fresh grapes", chapter: "22" },
-  { section: "IV", code: "220410", description: "Sparkling wine", chapter: "22" },
-  { section: "IV", code: "220421", description: "Wine in containers holding 2 litres or less", chapter: "22" },
-  { section: "IV", code: "220430", description: "Other grape must", chapter: "22" },
-  { section: "IV", code: "2207", description: "Undenatured ethyl alcohol", chapter: "22" },
-  { section: "IV", code: "220710", description: "Undenatured ethyl alcohol of 80% vol or higher", chapter: "22" },
+  // SECTION IV - PREPARED FOODSTUFFS (BEBIDAS Y VINOS)
+  { section: "IV", code: "22", description: "Bebidas, líquidos alcohólicos y vinagre / Beverages, spirits and vinegar", chapter: "22" },
+  { section: "IV", code: "2204", description: "Vino de uvas frescas / Wine of fresh grapes", chapter: "22" },
+  { section: "IV", code: "220410", description: "Vino espumoso, champán / Sparkling wine", chapter: "22" },
+  { section: "IV", code: "220421", description: "Vino en recipientes de capacidad inferior o igual a 2 litros / Wine in containers holding 2 litres or less", chapter: "22" },
+  { section: "IV", code: "22042110", description: "Vino tinto Malbec embotellado de Mendoza", chapter: "22" },
+  { section: "IV", code: "22042111", description: "Vino blanco Torrontés embotellado", chapter: "22" },
+  { section: "IV", code: "22042112", description: "Vino tinto Cabernet Sauvignon embotellado", chapter: "22" },
+  { section: "IV", code: "22042120", description: "Vino rosado embotellado", chapter: "22" },
+  { section: "IV", code: "220422", description: "Vino en recipientes de capacidad superior a 2 litros pero inferior o igual a 10 litros", chapter: "22" },
+  { section: "IV", code: "220429", description: "Otros vinos de uvas frescas en recipientes mayores a 10 litros", chapter: "22" },
+  { section: "IV", code: "220430", description: "Mosto de uva / Other grape must", chapter: "22" },
+  { section: "IV", code: "22043010", description: "Mosto de uva parcialmente fermentado", chapter: "22" },
+  { section: "IV", code: "22043020", description: "Mosto de uva sin fermentar", chapter: "22" },
+  { section: "IV", code: "2205", description: "Vermut y demás vinos de uvas frescas aromatizados", chapter: "22" },
+  { section: "IV", code: "220510", description: "Vermut en recipientes de capacidad inferior o igual a 2 litros", chapter: "22" },
+  { section: "IV", code: "2207", description: "Alcohol etílico sin desnaturalizar / Undenatured ethyl alcohol", chapter: "22" },
+  { section: "IV", code: "220710", description: "Alcohol etílico sin desnaturalizar de 80% vol o más / Undenatured ethyl alcohol of 80% vol or higher", chapter: "22" },
+  { section: "IV", code: "2208", description: "Aguardientes, licores y demás bebidas espirituosas", chapter: "22" },
+  { section: "IV", code: "220820", description: "Aguardiente de vino o de orujo de uvas (pisco, grappa)", chapter: "22" },
+  { section: "IV", code: "220840", description: "Ron y demás aguardientes de caña", chapter: "22" },
+  { section: "IV", code: "220850", description: "Gin y ginebra", chapter: "22" },
+  { section: "IV", code: "220870", description: "Licores", chapter: "22" },
 
   { section: "IV", code: "23", description: "Residues from food industries", chapter: "23" },
   { section: "IV", code: "2304", description: "Oil-cake and other solid residues of soya-bean oil", chapter: "23" },
@@ -148,15 +240,37 @@ export const hsData: HSItem[] = [
   { section: "VII", code: "4011", description: "New pneumatic tyres, of rubber", chapter: "40" },
   { section: "VII", code: "401110", description: "Pneumatic tyres for motor cars", chapter: "40" },
 
-  { section: "VII", code: "41", description: "Raw hides and skins and leather", chapter: "41" },
-  { section: "VII", code: "4104", description: "Tanned or crust hides and skins of bovine animals", chapter: "41" },
-  { section: "VII", code: "410411", description: "Full grains, unsplit; grain splits", chapter: "41" },
+  { section: "VII", code: "41", description: "Pieles (excepto peletería) y cueros / Raw hides and skins and leather", chapter: "41" },
+  { section: "VII", code: "4101", description: "Cueros y pieles en bruto de bovinos", chapter: "41" },
+  { section: "VII", code: "410150", description: "Cueros y pieles enteros de bovinos en bruto, de peso superior a 16 kg", chapter: "41" },
+  { section: "VII", code: "4102", description: "Cueros y pieles en bruto de ovinos", chapter: "41" },
+  { section: "VII", code: "4103", description: "Otros cueros y pieles en bruto", chapter: "41" },
+  { section: "VII", code: "4104", description: "Cueros y pieles curtidos o crust de bovinos / Tanned or crust hides and skins of bovine animals", chapter: "41" },
+  { section: "VII", code: "410411", description: "Cueros bovinos curtidos plena flor sin dividir o divididos con flor / Full grains, unsplit; grain splits", chapter: "41" },
+  { section: "VII", code: "410419", description: "Otros cueros bovinos en estado húmedo", chapter: "41" },
+  { section: "VII", code: "410441", description: "Cueros bovinos curtidos plena flor en estado seco", chapter: "41" },
+  { section: "VII", code: "4105", description: "Cueros y pieles curtidos de ovinos", chapter: "41" },
+  { section: "VII", code: "4106", description: "Cueros y pieles curtidos de caprinos", chapter: "41" },
+  { section: "VII", code: "4107", description: "Cueros preparados después del curtido de bovinos", chapter: "41" },
+  { section: "VII", code: "410712", description: "Cueros bovinos preparados divididos con la flor", chapter: "41" },
+  { section: "VII", code: "410719", description: "Otros cueros bovinos preparados", chapter: "41" },
 
-  { section: "VII", code: "42", description: "Articles of leather", chapter: "42" },
-  { section: "VII", code: "4202", description: "Trunks, suit-cases, handbags", chapter: "42" },
-  { section: "VII", code: "420221", description: "Handbags with outer surface of leather", chapter: "42" },
-  { section: "VII", code: "4205", description: "Other articles of leather or composition leather", chapter: "42" },
-  { section: "VII", code: "420500", description: "Other articles of leather", chapter: "42" },
+  { section: "VII", code: "42", description: "Manufacturas de cuero / Articles of leather", chapter: "42" },
+  { section: "VII", code: "4201", description: "Artículos de talabartería y guarnicionería", chapter: "42" },
+  { section: "VII", code: "420100", description: "Artículos de talabartería para animales", chapter: "42" },
+  { section: "VII", code: "4202", description: "Baúles, maletas, bolsos de mano / Trunks, suit-cases, handbags", chapter: "42" },
+  { section: "VII", code: "420211", description: "Baúles y maletas con superficie exterior de cuero", chapter: "42" },
+  { section: "VII", code: "420221", description: "Bolsos de mano con superficie exterior de cuero / Handbags with outer surface of leather", chapter: "42" },
+  { section: "VII", code: "420222", description: "Bolsos de mano con superficie exterior de plástico o textil", chapter: "42" },
+  { section: "VII", code: "420231", description: "Artículos de bolsillo con superficie exterior de cuero", chapter: "42" },
+  { section: "VII", code: "420291", description: "Otros contenedores con superficie exterior de cuero", chapter: "42" },
+  { section: "VII", code: "4203", description: "Prendas y accesorios de vestir de cuero", chapter: "42" },
+  { section: "VII", code: "420310", description: "Prendas de vestir de cuero", chapter: "42" },
+  { section: "VII", code: "420321", description: "Guantes de cuero para deportes", chapter: "42" },
+  { section: "VII", code: "420329", description: "Otros guantes de cuero", chapter: "42" },
+  { section: "VII", code: "420330", description: "Cinturones y bandoleras de cuero", chapter: "42" },
+  { section: "VII", code: "4205", description: "Otras manufacturas de cuero / Other articles of leather or composition leather", chapter: "42" },
+  { section: "VII", code: "420500", description: "Otras manufacturas de cuero / Other articles of leather", chapter: "42" },
 
   // SECTION XI - TEXTILES
   { section: "XI", code: "51", description: "Wool, fine or coarse animal hair", chapter: "51" },
@@ -201,16 +315,49 @@ export function getAllHSCodes(): HSItem[] {
   return hsData
 }
 
+// Spanish synonym mappings for better search
+const SYNONYMS: Record<string, string[]> = {
+  vino: ["wine", "vinos", "malbec", "torrontés", "cabernet", "espumoso", "champán"],
+  carne: ["meat", "bovino", "bovinos", "bovina", "porcino", "cerdo", "pollo", "aves"],
+  soja: ["soya", "soybean", "poroto", "haba"],
+  aceite: ["oil", "oliva", "girasol", "maní"],
+  miel: ["honey", "natural", "abeja"],
+  yerba: ["mate", "maté"],
+  limón: ["lemon", "lima", "cítrico", "citrus"],
+  cuero: ["leather", "piel", "pieles", "curtido"],
+  leche: ["milk", "lácteo", "dairy"],
+  queso: ["cheese", "requesón"],
+  uva: ["grape", "uvas", "pasa"],
+  trigo: ["wheat", "harina"],
+  maíz: ["corn", "maize"],
+  girasol: ["sunflower"],
+  fruta: ["fruit", "frutas", "fresco"],
+}
+
 /**
- * Search HS codes by keyword
+ * Search HS codes by keyword with Spanish synonym support
  */
 export function searchHSCodes(query: string, limit = 10): HSItem[] {
-  const lowerQuery = query.toLowerCase()
-  const keywords = lowerQuery.split(/\s+/).filter((k) => k.length > 2)
+  const lowerQuery = query.toLowerCase().trim()
+  let keywords = lowerQuery.split(/\s+/).filter((k) => k.length > 1)
 
   if (keywords.length === 0) {
     return hsData.slice(0, limit)
   }
+
+  // Expand keywords with synonyms
+  const expandedKeywords = new Set<string>(keywords)
+  keywords.forEach(keyword => {
+    // Check if keyword matches any synonym key
+    for (const [key, synonyms] of Object.entries(SYNONYMS)) {
+      if (key.includes(keyword) || keyword.includes(key) || synonyms.some(s => s.includes(keyword) || keyword.includes(s))) {
+        expandedKeywords.add(key)
+        synonyms.forEach(s => expandedKeywords.add(s))
+      }
+    }
+  })
+
+  const allKeywords = Array.from(expandedKeywords)
 
   const scored = hsData.map((item) => {
     const desc = item.description.toLowerCase()
@@ -226,17 +373,29 @@ export function searchHSCodes(query: string, limit = 10): HSItem[] {
       score += 50
     }
 
-    // Keyword matching
+    // Original keyword matching (higher weight)
     keywords.forEach((keyword) => {
       if (desc.includes(keyword)) {
-        score += 10
+        score += 15
       }
       // Word boundary match bonus
-      const wordRegex = new RegExp(`\\b${keyword}\\b`, "i")
+      const wordRegex = new RegExp(`\\b${keyword}`, "i")
       if (wordRegex.test(desc)) {
+        score += 10
+      }
+    })
+
+    // Expanded keyword matching (lower weight)
+    allKeywords.forEach((keyword) => {
+      if (!keywords.includes(keyword) && desc.includes(keyword)) {
         score += 5
       }
     })
+
+    // Prefer more specific codes (6+ digits)
+    if (item.code.length >= 6 && score > 0) {
+      score += 3
+    }
 
     return { item, score }
   })

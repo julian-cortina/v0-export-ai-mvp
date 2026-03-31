@@ -1,5 +1,3 @@
-import jsPDF from "jspdf"
-
 interface PDFData {
   hsCode: string
   confidence: number
@@ -14,7 +12,10 @@ interface PDFData {
   productDescription: string
 }
 
-export function generatePDF(data: PDFData) {
+export async function generatePDF(data: PDFData) {
+  // Dynamic import to avoid SSR issues with jspdf
+  const { default: jsPDF } = await import("jspdf")
+  
   const doc = new jsPDF()
 
   // Set up colors
