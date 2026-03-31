@@ -120,7 +120,7 @@ export default function Home() {
   const handleDownloadPDF = async () => {
     if (!result || !formData) return
 
-    // Dynamic import to avoid SSR issues with jspdf
+    // Dynamic import for PDF generation
     const { generatePDF } = await import("@/lib/pdf-generator")
     
     await generatePDF({
