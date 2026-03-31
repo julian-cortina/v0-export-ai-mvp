@@ -5,7 +5,6 @@ import { ProductAnalysisForm } from "@/components/product-analysis-form"
 import { AnalysisResults } from "@/components/analysis-results"
 import { HSCodeSuggestions } from "@/components/hs-code-suggestions"
 import { NCMSearch } from "@/components/ncm-search"
-import { generatePDF } from "@/lib/pdf-generator"
 
 interface HSCodeMatch {
   code: string
@@ -121,6 +120,9 @@ export default function Home() {
   const handleDownloadPDF = async () => {
     if (!result || !formData) return
 
+    // Dynamic import to avoid SSR issues with jspdf
+    const { generatePDF } = await import("@/lib/pdf-generator")
+    
     await generatePDF({
       hsCode: result.hsCode,
       confidence: result.confidence,
